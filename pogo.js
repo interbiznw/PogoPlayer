@@ -42,6 +42,9 @@ for (let i = 0; i < acc.length; i++) {
 }
 
 function pickTrainerName (client, a) {
+  if (a[5].length > 12) {
+    console.log(`Seems like ${a[5]} is too long name... (PROTIP: It can't exceed 12 characters!) Run this to try different name!:\nnode name.js -a ${a[0]} -u ${a[1]} -p ${a[2]} -l ${a[3]},${a[4]} -u TRAINER-NAME`)
+  }
   new Promise(resolve=>{
     resolve(client.checkCodenameAvailable(a[5]));
   })
