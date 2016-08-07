@@ -3,7 +3,7 @@
 const pogobuf = require("pogobuf");
 const fs = require("fs");
 
-const acc = fs.readFileSync("./accounts.csv", "utf-8").split("\n").map(x=>x.split(","));
+const acc = fs.readFileSync("./accounts.csv", "utf-8").split("\n").filter(x=>x!=="").map(x=>x.split(","));
 
 for (let i = 0; i < acc.length; i++) {
   let a = acc[i];
@@ -32,12 +32,12 @@ for (let i = 0; i < acc.length; i++) {
         })
         .then(()=>{
           if (a[5]) {pickTrainerName(client, a)}
-        }).catch(err => {console.error(err);});
-      }).catch(err => {console.error(err);});
+        }).catch(err => {console.error("Failed to mark tutorial as complete... ERROR:", err);});
+      }).catch(err => {console.error("Failed to complete the tutorial... ERROR:", err);});
     }, timeOut);
   })
   .catch(err => {
-    console.error(err);
+    console.error("Failed to initialize client... ERROR:", err);
   });
 }
 
@@ -53,9 +53,9 @@ function pickTrainerName (client, a) {
       new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
       .then(() => {
         console.log(`Your trainer now is known as ${a[5]}!`);
-      }).catch(err => {console.error(err);});
+      }).catch(err => {"Failed to set name... ERROR:", console.error(err);});
     } else {
       console.log(`Seems like there's already someone known as ${a[5]}... Run this to try different name!:\nnode name.js -a ${a[0]} -u ${a[1]} -p ${a[2]} -l ${a[3]},${a[4]} -u TRAINER-NAME`);
     }
-  }).catch(err => {console.error(err);});
+  }).catch(err => {console.error("Failed to check for name... ERROR:", err);});
 }
