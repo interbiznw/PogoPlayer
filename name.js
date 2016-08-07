@@ -13,6 +13,7 @@ for (let i = 2; i < process.argv.length; i++) {
     args[a] = arg;
   }
 }
+args.l = args.l.split(",");
 const login = args[a] === "ptc"
   ? pogobuf.PTCLogin()
   : pogobuf.GoogleLogin();
