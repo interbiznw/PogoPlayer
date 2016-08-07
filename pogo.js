@@ -1,3 +1,5 @@
+"use strict";
+
 const pogobuf = require("pogobuf");
 const fs = require("fs");
 
