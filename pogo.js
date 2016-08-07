@@ -37,10 +37,10 @@ for (let i = 0; i < acc.length; i++) {
             if (data.is_assignable) {
               new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
               .then(() => {
-                console.log(`${a[5]} codename has been picked!`);
+                console.log(`${a[5]} trainer's name has been picked!`);
               })
             } else {
-              console.log(`Failed to get${a[5]} codename at ${i} index/line`);
+              console.log(`Failed to get${a[5]} trainer name at ${i} index/line`);
             }
           });
         });
