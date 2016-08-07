@@ -1,5 +1,7 @@
-Usage:
+Make sure you've latest node.js and npm!
 
+Usage:
+`npm install`
 `node pogo.js [config]`
 
 Config:
