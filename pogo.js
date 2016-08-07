@@ -1,14 +1,12 @@
 const pogobuf = require("pogobuf");
 
-
 const args = {
-  "a": "ptc",
-  "i": [1,4,7][Math.random()*3|0]
+  "a": "ptc"
 };
 var a;
 for (let i = 2; i < process.argv.length; i++) {
   let arg = process.argv[i];
-  let m = arg.match(/-(a|u|p|l|i)/);
+  let m = arg.match(/-(a|u|p|l|n)/);
   if (m) {
     a = m[1];
   } else {
@@ -30,7 +28,7 @@ login.login(args.u, args.p)
 .then(() => {
   setTimeout(() => {
     new Promise((resolve) => {
-      resolve(client.encounterTutorialComplete(args.i))
+      resolve(client.encounterTutorialComplete(1))
     })    
     .then(() => {
       new Promise((resolve) => {
@@ -38,8 +36,21 @@ login.login(args.u, args.p)
       })
       .then(plr=>{
         console.log(plr);
+        new Promise(resolve=>{
+          resolve(client.checkCodenameAvailable(args.n));
+        })
+        .then(data=>{
+          if (data.is_assignable) {
+            new Promise((resolve)=>{resolve(client.claimCodename(args.n));})
+            .then((plr)=>{console.log("Username has been choosen!")});
+          } else {
+            console.log("Username is not available")
+          }
+        })
       });
     });
   }, 5000);
 })
-.catch(err => {console.error(err)})
+.catch(err => {
+  console.error(err);
+});
