@@ -31,7 +31,7 @@ for (let i = 0; i < acc.length; i++) {
           resolve(client.markTutorialComplete(0, false, false));
         })
         .then(()=>{
-          if (a[5]) {pickTrainerName(client)}
+          if (a[5]) {pickTrainerName(client, a)}
         }).catch(err => {console.error(err);});
       }).catch(err => {console.error(err);});
     }, timeOut);
@@ -41,7 +41,7 @@ for (let i = 0; i < acc.length; i++) {
   });
 }
 
-function pickTrainerName (client) {
+function pickTrainerName (client, a) {
   new Promise(resolve=>{
     resolve(client.checkCodenameAvailable(a[5]));
   })
