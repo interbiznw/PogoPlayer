@@ -36,6 +36,11 @@ for (let i = 0; i < acc.length; i++) {
           .then(data=>{
             if (data.is_assignable) {
               new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
+              .then(() => {
+                console.log(`${a[5]} codename has been picked!`);
+              })
+            } else {
+              console.log(`Failed to get${a[5]} codename at ${i} index/line`);
             }
           });
         });
@@ -46,3 +51,5 @@ for (let i = 0; i < acc.length; i++) {
     console.error(err);
   });
 }
+
+
