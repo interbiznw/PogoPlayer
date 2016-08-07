@@ -1,58 +1,48 @@
 const pogobuf = require("pogobuf");
+const fs = require("fs");
 
-const args = {
-  "a": "ptc"
-};
-var a;
-for (let i = 2; i < process.argv.length; i++) {
-  let arg = process.argv[i];
-  let m = arg.match(/-(a|u|p|l|n)/);
-  if (m) {
-    a = m[1];
-  } else {
-    args[a] = arg;
-  }
-}
-args.l = args.l.split(",");
-const login = args.a === "ptc"
-  ? pogobuf.PTCLogin()
-  : pogobuf.GoogleLogin();
-const client = pogobuf.Client();
-console.log(args)
-login.login(args.u, args.p)
-.then(token => {  
-  client.setAuthInfo(args.a, token);
-  client.setPosition(parseFloat(args.l[0]), parseFloat(args.l[1]));
-  return client.init();
-})
-.then(() => {
-  setTimeout(() => {
-    new Promise((resolve) => {
-      resolve(client.encounterTutorialComplete(1))
-    })    
-    .then(() => {
+const acc = fs.readFileSync("./accounts.csv", "utf-8").split("\n").map(x=>x.split(","));
+console.log(acc);
+
+for (let i = 0; i < acc.length; i++) {
+  let a = acc[i];
+  console.log(`Auth service: ${a[0]}, Username: ${a[1]}, Password: ${a[2]}, Location: ${a[3]},${a[4]}`);
+  
+  let login = a[0] === "ptc"
+    ? pogobuf.PTCLogin()
+    : pogobuf.GoogleLogin();
+  let client = pogobuf.Client();
+  login.login(a[1], a[2])
+  .then(token => {
+    client.setAuthInfo(a[0], token);
+    client.setPosition(parseFloat(a[3]), parseFloat(a[4]));
+    return client.init();
+  })
+  .then(() => {
+    let timeOut = Math.random()*3000+5000|0;
+    console.log(`Logged in. Doing stuff in ${timeOut/1000} seconds`);
+    setTimeout(() => {
       new Promise((resolve) => {
-        resolve(client.markTutorialComplete(0, false, false));
-      })
-      .then(plr=>{
-        console.log(plr);
-        if (args.n) {
+        resolve(client.encounterTutorialComplete(1))
+      })    
+      .then(() => {
+        new Promise((resolve) => {
+          resolve(client.markTutorialComplete(0, false, false));
+        })
+        .then(plr=>{
           new Promise(resolve=>{
-            resolve(client.checkCodenameAvailable(args.n));
+            resolve(client.checkCodenameAvailable(a[5]));
           })
           .then(data=>{
             if (data.is_assignable) {
-              new Promise((resolve)=>{resolve(client.claimCodename(args.n));})
-              .then((plr)=>{console.log("Username has been choosen!")});
-            } else {
-              console.log("Username is not available")
+              new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
             }
           });
-        }
+        });
       });
-    });
-  }, 5000);
-})
-.catch(err => {
-  console.error(err);
-});
+    }, timeOut);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+}

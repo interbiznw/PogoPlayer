@@ -1,24 +1,33 @@
 Make sure you've latest node.js and npm!
 
 Usage:
+
+1. 
+
 `npm install`
-`node pogo.js [config]`
+`node pogo.js`
 
-Config:
-
-1. `-a` - Auth service:
-  * ptc
-  * google
-2. `-u` - PTC username or Google Email
-3. `-p` - Password
-4. `-l` - Location where at it should make account. Format is `lat,lng`
-5. `-n` - Nickname to pick for your trainer. _(Optional: if its not specified it wont try to pick an username)
-
-Example usage: 
-
-`node pogo.js -a ptc -u MRokas -p over9001 -l 13.37 -90.01 -n MRokas`
-`node pogo.js -a google -u example@gmail.comname.js -p over9001 -l 13.37 -90.01 -n MRokas`
 
 If your username is not available rerun it with `node name.js` with different `-n` argument.
 
 If you want to check account run `node player.js` - feel free to exclude `-n` argument.
+
+#PokemonGo trainer activator - don't bother to login to accept ToS and pick codename!
+
+Usage guide:
+
+1. Make sure you've latest node.js and npm!
+2. Download .zip or clone
+3. Run this inside directory: `npm install`
+4. Rename `accounts.csv.example` to `accounts.csv`
+5. Input data in `accounts.csv` in `auth,username,password,lat,lng,codename` format
+6. run `node pogo.js`
+
+Known issues:
+
+1. It doesn't inform if it fails to get desired codename.
+
+Todo:
+
+* Better informing of failed steps
+* Tell which codenames didnt get picked
