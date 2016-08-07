@@ -36,17 +36,19 @@ login.login(args.u, args.p)
       })
       .then(plr=>{
         console.log(plr);
-        new Promise(resolve=>{
-          resolve(client.checkCodenameAvailable(args.n));
-        })
-        .then(data=>{
-          if (data.is_assignable) {
-            new Promise((resolve)=>{resolve(client.claimCodename(args.n));})
-            .then((plr)=>{console.log("Username has been choosen!")});
-          } else {
-            console.log("Username is not available")
-          }
-        })
+        if (args.n) {
+          new Promise(resolve=>{
+            resolve(client.checkCodenameAvailable(args.n));
+          })
+          .then(data=>{
+            if (data.is_assignable) {
+              new Promise((resolve)=>{resolve(client.claimCodename(args.n));})
+              .then((plr)=>{console.log("Username has been choosen!")});
+            } else {
+              console.log("Username is not available")
+            }
+          });
+        }
       });
     });
   }, 5000);
