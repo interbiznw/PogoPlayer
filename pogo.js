@@ -4,7 +4,6 @@ const pogobuf = require("pogobuf");
 const fs = require("fs");
 
 const acc = fs.readFileSync("./accounts.csv", "utf-8").split("\n").map(x=>x.split(","));
-console.log(acc);
 
 for (let i = 0; i < acc.length; i++) {
   let a = acc[i];
@@ -31,22 +30,10 @@ for (let i = 0; i < acc.length; i++) {
         new Promise((resolve) => {
           resolve(client.markTutorialComplete(0, false, false));
         })
-        .then(plr=>{
-          new Promise(resolve=>{
-            resolve(client.checkCodenameAvailable(a[5]));
-          })
-          .then(data=>{
-            if (data.is_assignable) {
-              new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
-              .then(() => {
-                console.log(`${a[5]} trainer's name has been picked!`);
-              })
-            } else {
-              console.log(`Failed to get${a[5]} trainer name at ${i} index/line`);
-            }
-          });
-        });
-      });
+        .then(()=>{
+          if (a[5]) {pickTrainerName()}
+        }).catch(err => {console.error(err);});
+      }).catch(err => {console.error(err);});
     }, timeOut);
   })
   .catch(err => {
@@ -54,4 +41,18 @@ for (let i = 0; i < acc.length; i++) {
   });
 }
 
-
+function pickTrainerName () {
+  new Promise(resolve=>{
+    resolve(client.checkCodenameAvailable(a[5]));
+  })
+  .then(data=>{
+    if (data.is_assignable) {
+      new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
+      .then(() => {
+        console.log(`Your trainer now is known as ${a[5]}!`);
+      }).catch(err => {console.error(err);});
+    } else {
+      console.log(`Seems like there's already someone known as ${a[5]}... Run this to try different name!:\nnode name.js -a ${a[0]} -u ${a[1]} -p ${a[2]} -l ${a[3]},${a[4]} -u TRAINER-NAME`);
+    }
+  }).catch(err => {console.error(err);});
+}
