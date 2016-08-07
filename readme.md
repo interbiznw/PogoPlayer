@@ -1,17 +1,3 @@
-Make sure you've latest node.js and npm!
-
-Usage:
-
-1. 
-
-`npm install`
-`node pogo.js`
-
-
-If your username is not available rerun it with `node name.js` with different `-n` argument.
-
-If you want to check account run `node player.js` - feel free to exclude `-n` argument.
-
 #PokemonGo trainer activator - don't bother to login to accept ToS and pick codename!
 
 Usage guide:
