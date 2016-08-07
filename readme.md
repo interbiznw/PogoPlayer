@@ -15,4 +15,6 @@ Config:
 Example usage: 
 
 `node pogo.js -a ptc -u MRokas -p over9001 -l 13.37 -90.01 -n MRokas`
-`node pogo.js -a google -u example@gmail.com -p over9001 -l 13.37 -90.01 -n MRokas`
+`node pogo.js -a google -u example@gmail.comname.js -p over9001 -l 13.37 -90.01 -n MRokas`
+
+If your username is not available rerun it with `node name.js` with different `-n` argument.
