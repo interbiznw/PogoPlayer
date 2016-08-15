@@ -3,8 +3,7 @@
 const pogobuf = require("pogobuf");
 const fs = require("fs");
 
-const acc = fs.readFileSync("./accounts.csv", "utf-8").split("\n").map(x=>x.split(","));
-console.log(acc);
+const acc = fs.readFileSync("./accounts.csv", "utf-8").split("\n").filter(x=>x!=="").map(x=>x.split(","));
 
 for (let i = 0; i < acc.length; i++) {
   let a = acc[i];
@@ -31,27 +30,35 @@ for (let i = 0; i < acc.length; i++) {
         new Promise((resolve) => {
           resolve(client.markTutorialComplete(0, false, false));
         })
-        .then(plr=>{
-          new Promise(resolve=>{
-            resolve(client.checkCodenameAvailable(a[5]));
-          })
-          .then(data=>{
-            if (data.is_assignable) {
-              new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
-              .then(() => {
-                console.log(`${a[5]} trainer's name has been picked!`);
-              })
-            } else {
-              console.log(`Failed to get${a[5]} trainer name at ${i} index/line`);
-            }
-          });
-        });
-      });
+        .then(()=>{
+          if (a[5]) {pickTrainerName(client, a)}
+        }).catch(err => {console.error("Failed to mark tutorial as complete... ERROR:", err);});
+      }).catch(err => {console.error("Failed to complete the tutorial... ERROR:", err);});
     }, timeOut);
   })
   .catch(err => {
-    console.error(err);
+    console.error("Failed to initialize client... ERROR:", err);
   });
 }
 
-
+function pickTrainerName (client, a) {
+  a[5] = a[5].replace(/\r/g, '');
+  if (a[5].length > 12) {
+    console.log(`Seems like ${a[5]} is too long name... (PROTIP: It can't exceed 12 characters!) Run this to try different name!:
+node name.js -a ${a[0]} -u ${a[1]} -p ${a[2]} -l ${a[3]},${a[4]} -u TRAINER-NAME`); 
+  }
+  new Promise(resolve=>{
+    resolve(client.checkCodenameAvailable(a[5]));
+  })
+  .then(data=>{
+    if (data.is_assignable) {
+      new Promise((resolve)=>{resolve(client.claimCodename(a[5]));})
+      .then(() => {
+        console.log(`Your trainer now is known as ${a[5]}!`);
+      }).catch(err => {"Failed to set name... ERROR:", console.error(err);});
+    } else {
+      console.log(`Seems like there's already someone known as ${a[5]}... Run this to try different name!:
+node name.js -a ${a[0]} -u ${a[1]} -p ${a[2]} -l ${a[3]},${a[4]} -u TRAINER-NAME`);
+    }
+  }).catch(err => {console.error("Failed to check for name... ERROR:", err);});
+}
